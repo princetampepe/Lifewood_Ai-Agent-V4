@@ -105,7 +105,8 @@ def _get_or_create_google_user(creds):
 
 
 def oauth2callback(request):
-    saved_state = request.session.get('google_oauth_state')
+    # Get state from session, fall back to request param if session was lost
+    saved_state = request.session.get('google_oauth_state') or request.GET.get('state')
     saved_verifier = request.session.get('google_oauth_code_verifier')
 
     flow = Flow.from_client_secrets_file(
@@ -120,7 +121,7 @@ def oauth2callback(request):
         flow.fetch_token(authorization_response=request.build_absolute_uri())
     except Exception as e:
         print(f"Token fetch failed: {e}")
-        return redirect(f'{FRONTEND_URL}?error=auth_failed')
+        return redirect(f'{FRONTEND_URL}?error=auth_failed&reason={str(e)}')
 
     creds = flow.credentials
 
@@ -139,7 +140,6 @@ def oauth2callback(request):
             'client_secret': creds.client_secret,
             'scopes': ','.join(creds.scopes),
         }
-        # Only update refresh_token if Google returned one
         if creds.refresh_token:
             token_defaults['refresh_token'] = creds.refresh_token
 
