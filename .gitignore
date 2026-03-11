@@ -149,4 +149,9 @@ reports/
 # Google Credintials files
 credentials.json
 
+# N8N Environment variable files
+n8n/.env
+expense-ai-backend/.env
+expense-ai-frontend/.env.local
+
 # End of .gitignore
