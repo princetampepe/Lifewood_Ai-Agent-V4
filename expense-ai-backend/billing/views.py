@@ -333,8 +333,6 @@ def save_receipt(request):
 
 
 @require_GET
-@require_auth
-@require_GET
 def list_receipts(request):
     """
     Returns all receipts. Accepts session auth (frontend) or X-Agent-Secret (n8n).
