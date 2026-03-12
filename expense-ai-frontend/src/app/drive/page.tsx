@@ -112,14 +112,14 @@ function getFolderHealth(item: DriveItem): { label: string; tone: 'healthy' | 'a
   const totalItems = countItems(item);
 
   if (totalItems >= 5) {
-    return { label: 'Ready for review', tone: 'healthy' };
+    return { label: 'Ready', tone: 'healthy' };
   }
 
   if (totalItems >= 1) {
-    return { label: 'Needs more uploads', tone: 'attention' };
+    return { label: 'Needs uploads', tone: 'attention' };
   }
 
-  return { label: 'Empty workspace', tone: 'attention' };
+  return { label: 'Empty', tone: 'attention' };
 }
 
 const GREETINGS = ['Good day, admin', 'Welcome back, admin', 'Hello, admin'];
@@ -251,9 +251,10 @@ export default function DrivePage() {
       </header>
 
       <div className={styles.pageContent}>
-      <section className={styles.hero}>
-        <div className={styles.heroCard}>
-          <span className={styles.badge}>Operations workspace</span>
+
+      {/* ── Hero banner ── */}
+      <section className={styles.heroBanner}>
+        <div className={styles.heroBannerLeft}>
           <div className={styles.heroTicker} aria-label="Always on never off">
             <div className={styles.heroTickerTrack}>
               <span>Always On Never Off • Always On Never Off • Always On Never Off • Always On Never Off •</span>
@@ -264,72 +265,71 @@ export default function DrivePage() {
             {greeting}
           </h1>
           <p className={styles.heroSubtitle}>Select a scanned expense folder below to open its review workspace.</p>
-          <div className={styles.heroDetails}>
-            <div className={styles.heroDetailCard}>
-              <span>Last sync window</span>
-              <strong>{formatRelativeTime(latestModified)}</strong>
-              <p>{formatAbsoluteDate(latestModified)}</p>
-            </div>
-            <div className={styles.heroDetailCard}>
-              <span>Review coverage</span>
-              <strong>{foldersWithFiles}/{folders.length || 1}</strong>
-              <p>folders already contain scanned material</p>
-            </div>
-          </div>
         </div>
-        <div className={styles.heroMetrics}>
-          <article className={styles.metricCard}>
-            <FolderOpen className={styles.metricIcon} size={18} />
-            <span>Top-level scans</span>
-            <strong>{folders.length}</strong>
-          </article>
-          <article className={styles.metricCard}>
-            <Folder className={styles.metricIcon} size={18} />
-            <span>Nested folders</span>
-            <strong>{stats.folderCount}</strong>
-          </article>
-          <article className={styles.metricCard}>
-            <File className={styles.metricIcon} size={18} />
-            <span>Files indexed</span>
-            <strong>{stats.fileCount}</strong>
-          </article>
+        <div className={styles.heroBannerRight}>
+          <div className={styles.heroDetailCard}>
+            <span>Last sync</span>
+            <strong>{formatRelativeTime(latestModified)}</strong>
+          </div>
+          <div className={styles.heroDetailCard}>
+            <span>Coverage</span>
+            <strong>{foldersWithFiles}/{folders.length || 1}</strong>
+          </div>
         </div>
       </section>
 
-      <section className={styles.overviewGrid}>
-        <article className={styles.overviewCard}>
-          <div className={styles.overviewHeader}>
-            <span className={styles.sectionLabel}>Queue pulse</span>
-            <Sparkles size={16} />
+      {/* ── Stats strip ── */}
+      <section className={styles.statsStrip}>
+        <article className={styles.statItem}>
+          <FolderOpen className={styles.statIcon} size={16} />
+          <div>
+            <strong>{folders.length}</strong>
+            <span>Top-level scans</span>
           </div>
-          <strong>{rootFolders.length} active review lanes</strong>
-          <p>
-            Search, switch views, and move straight into the workspace with the most recent expense activity.
-          </p>
         </article>
-
-        <article className={styles.overviewCard}>
-          <div className={styles.overviewHeader}>
-            <span className={styles.sectionLabel}>Suggested next</span>
-            <Clock3 size={16} />
+        <span className={styles.statDivider} aria-hidden="true" />
+        <article className={styles.statItem}>
+          <Folder className={styles.statIcon} size={16} />
+          <div>
+            <strong>{stats.folderCount}</strong>
+            <span>Nested folders</span>
           </div>
-          <strong>{activeFolder ? activeFolder.name : 'No folder selected'}</strong>
-          <p>
-            {activeFolder
-              ? `${countItems(activeFolder)} indexed item${countItems(activeFolder) === 1 ? '' : 's'} ready to inspect.`
-              : 'Connect or upload more files to populate your review queue.'}
-          </p>
-          {activeFolder ? (
-            <button
-              className={styles.inlineAction}
-              onClick={() => openFolder(activeFolder.id)}
-              type="button"
-            >
-              Open recommended folder
-              <ArrowRight size={15} />
-            </button>
-          ) : null}
         </article>
+        <span className={styles.statDivider} aria-hidden="true" />
+        <article className={styles.statItem}>
+          <File className={styles.statIcon} size={16} />
+          <div>
+            <strong>{stats.fileCount}</strong>
+            <span>Files indexed</span>
+          </div>
+        </article>
+        <span className={styles.statDivider} aria-hidden="true" />
+        <article className={styles.statItem}>
+          <Sparkles className={styles.statIcon} size={16} />
+          <div>
+            <strong>{rootFolders.length}</strong>
+            <span>Review lanes</span>
+          </div>
+        </article>
+        {activeFolder ? (
+          <>
+            <span className={styles.statDivider} aria-hidden="true" />
+            <article className={styles.statItemAction}>
+              <Clock3 className={styles.statIcon} size={16} />
+              <div>
+                <span>Suggested</span>
+                <strong>{activeFolder.name}</strong>
+              </div>
+              <button
+                className={styles.statButton}
+                onClick={() => openFolder(activeFolder.id)}
+                type="button"
+              >
+                Open <ArrowRight size={13} />
+              </button>
+            </article>
+          </>
+        ) : null}
       </section>
 
       {connectionStatus === 'success' ? (
@@ -380,9 +380,6 @@ export default function DrivePage() {
           {rootFolders.map((folder, i) => (
             (() => {
               const directItems = folder.children?.length ?? 0;
-              const totalIndexedItems = countItems(folder);
-              const health = getFolderHealth(folder);
-              const recentActivity = formatRelativeTime(getLatestModified(folder.children ?? []));
 
               return (
                 <button
@@ -392,24 +389,15 @@ export default function DrivePage() {
                   type="button"
                 >
                   <div className={styles.folderCardTop}>
-                    <span className={styles.folderIcon}><Folder size={20} /></span>
-                    <span className={`${styles.folderStatus} ${health.tone === 'healthy' ? styles.folderStatusHealthy : styles.folderStatusAttention}`}>
-                      {health.label}
-                    </span>
+                    <span className={styles.folderIcon}><Folder size={18} /></span>
                   </div>
-                  <h3>{folder.name}</h3>
-                  <p>{directItems} direct item{directItems === 1 ? '' : 's'} in this workspace</p>
-                  <div className={styles.folderStats}>
-                    <div>
-                      <span>Indexed</span>
-                      <strong>{totalIndexedItems}</strong>
-                    </div>
-                    <div>
-                      <span>Recent activity</span>
-                      <strong>{recentActivity}</strong>
-                    </div>
+                  <div className={styles.folderCardBody}>
+                    <h3>{folder.name}</h3>
+                    <p className={styles.folderSummary}>
+                      {directItems} item{directItems === 1 ? '' : 's'}
+                    </p>
                   </div>
-                  <span className={styles.folderLink}>Open workspace <ChevronRight size={14} /></span>
+                  <span className={styles.folderLink}>Open <ChevronRight size={13} /></span>
                 </button>
               );
             })()
