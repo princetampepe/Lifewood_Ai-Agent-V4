@@ -41,7 +41,11 @@ OAUTH_REDIRECT_URI = os.environ.get(
 
 def _is_n8n_request(request):
     """Check if the request is coming from n8n with the shared secret."""
-    secret = request.headers.get('X-N8N-Secret') or request.headers.get('X-n8n-secret')
+    secret = (
+        request.headers.get('X-Agent-Secret') or
+        request.headers.get('X-N8N-Secret') or
+        request.headers.get('X-n8n-secret')
+    )
     return N8N_AGENT_SECRET and secret == N8N_AGENT_SECRET
 
 
