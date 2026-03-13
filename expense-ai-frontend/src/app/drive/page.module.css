@@ -446,7 +446,6 @@
   color: rgba(246, 241, 227, 0.9);
 }
 
-<<<<<<< HEAD
 .heroCard h1 {
   position: relative;
   margin: 14px 0 8px;
@@ -519,8 +518,6 @@
   gap: 10px;
 }
 
-=======
->>>>>>> b6b845ce6ae90545d016c4a5d336703ed6f9d584
 .metricCard {
   position: relative;
   overflow: hidden;
@@ -1867,7 +1864,6 @@
   }
 }
 
-<<<<<<< HEAD
 @keyframes lifewoodFadeRise {
   from {
     opacity: 0;
@@ -1888,7 +1884,8 @@
     opacity: 1;
     transform: translateY(0);
   }
-=======
+}
+
 @keyframes syncPulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.45; transform: scale(0.8); }
@@ -1897,5 +1894,4 @@
 @keyframes navDotPulse {
   0%, 100% { box-shadow: 0 0 0 2px rgba(245, 166, 35, 0.28); }
   50% { box-shadow: 0 0 0 4px rgba(245, 166, 35, 0.14); }
->>>>>>> b6b845ce6ae90545d016c4a5d336703ed6f9d584
 }

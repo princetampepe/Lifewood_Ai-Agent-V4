@@ -43,8 +43,6 @@ function summarizeTree(items: DriveItem[]) {
   return { folderCount, fileCount };
 }
 
-<<<<<<< HEAD
-=======
 function getLatestModified(items: DriveItem[]): string | null {
   let latestTimestamp = 0;
 
@@ -145,7 +143,6 @@ function useCyclingGreeting(intervalMs: number) {
   return { greeting: GREETINGS[index], animClass };
 }
 
->>>>>>> b6b845ce6ae90545d016c4a5d336703ed6f9d584
 export default function DrivePage() {
   const router = useRouter();
   const [folders, setFolders] = useState<DriveItem[]>([]);
@@ -155,6 +152,7 @@ export default function DrivePage() {
   const [error, setError] = useState<string | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<string | null>(null);
   const [userType, setUserType] = useState<'new' | 'returning'>('new');
+  const { greeting, animClass } = useCyclingGreeting(6000);
 
   const deferredSearch = useDeferredValue(searchInput.trim().toLowerCase());
 
@@ -255,21 +253,19 @@ export default function DrivePage() {
         </a>
 
         {/* ── Centre nav ── */}
-        <nav className={styles.topbarNav}>
-          <a
-            className={styles.navPill}
-            href="https://peaceful-gentleness-production-181e.up.railway.app/dashboard"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <LayoutDashboard className={styles.navIcon} size={14} />
-            <span className={styles.navLabel}>GO TO DASHBOARD</span>
-            <span className={styles.navActiveDot} aria-hidden="true" />
-          </a>
-        </nav>
+        <nav className={styles.topbarNav} />
 
         {/* ── Actions ── */}
         <div className={styles.topbarActions}>
+          <a
+            className={styles.navPill}
+            href="/dashboard"
+          >
+            <LayoutDashboard className={styles.navIcon} size={14} />
+            <span className={styles.navLabel}>AI Dashboard</span>
+            <ArrowRight size={13} className={styles.navIcon} />
+            <span className={styles.navActiveDot} aria-hidden="true" />
+          </a>
           <div className={styles.syncBadge}>
             <span className={styles.syncPulse} aria-hidden="true" />
             <span>{folders.length} folder{folders.length !== 1 ? 's' : ''} synced</span>
@@ -281,22 +277,6 @@ export default function DrivePage() {
         </div>
       </header>
 
-<<<<<<< HEAD
-      <section className={styles.hero}>
-        <div className={styles.heroCard}>
-          <div className={styles.heroTicker} aria-label="Always on never off">
-            <div className={styles.heroTickerTrack}>
-              <span>Always On Never Off • Always On Never Off • Always On Never Off • Always On Never Off •</span>
-              <span aria-hidden="true">Always On Never Off • Always On Never Off • Always On Never Off • Always On Never Off •</span>
-            </div>
-          </div>
-          <h1
-            className={`${styles.greetingText} ${styles.greetingHeader} ${
-              userType === 'new' ? styles.newUserHeaderIn : styles.returningUserHeaderIn
-            }`}
-          >
-            {greetingContent.header}
-=======
       <div className={styles.pageContent}>
 
       {/* ── Hero banner ── */}
@@ -305,7 +285,6 @@ export default function DrivePage() {
           <span className={styles.heroTagline}>ALWAYS ON NEVER OFF</span>
           <h1 className={`${styles.greetingText} ${animClass === 'splitIn' ? styles.splitIn : styles.splitOut}`}>
             {greeting}
->>>>>>> b6b845ce6ae90545d016c4a5d336703ed6f9d584
           </h1>
           <p
             className={`${styles.heroSubtitle} ${styles.greetingDescription} ${
