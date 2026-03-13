@@ -472,6 +472,81 @@
   color: rgba(246, 241, 227, 0.9);
 }
 
+<<<<<<< HEAD
+.heroCard h1 {
+  position: relative;
+  margin: 14px 0 8px;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  overflow: hidden;
+}
+
+.greetingText {
+  display: inline-block;
+}
+
+.greetingHeader {
+  font-family: var(--font-manrope, Manrope), "Segoe UI", sans-serif;
+  color: var(--white);
+}
+
+.greetingDescription {
+  font-family: var(--font-manrope, Manrope), "Segoe UI", sans-serif;
+  color: rgba(245, 238, 219, 0.88);
+}
+
+.newUserHeaderIn {
+  animation: lifewoodFadeRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.newUserDescriptionIn {
+  animation: lifewoodFadeRise 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+.returningUserHeaderIn {
+  animation: lifewoodSlideUp 0.48s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.returningUserDescriptionIn {
+  animation: lifewoodSlideUp 0.58s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+.splitIn {
+  animation: splitIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.splitOut {
+  animation: splitOut 0.45s cubic-bezier(0.55, 0, 1, 0.45) both;
+}
+
+.heroCard em {
+  color: var(--saffaron);
+  font-style: normal;
+}
+
+.heroCard p {
+  position: relative;
+  margin: 6px 0 0;
+  max-width: 38ch;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.heroSubtitle {
+  max-width: 34ch;
+}
+
+.heroMetrics {
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+=======
+>>>>>>> 61e4a28c500af9ebbf9fcba95bbf1e9946dc4597
 .metricCard {
   position: relative;
   overflow: hidden;
