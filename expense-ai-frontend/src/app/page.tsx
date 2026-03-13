@@ -62,7 +62,8 @@ export default function HomePage() {
         <div className={styles.overlay}>
           {/* Top badge */}
           <div className={styles.heroBadge}>
-            Always On Never Off
+            <span className={styles.heroBadgeAlwaysOn}>ALWAYS ON</span>
+            <span className={styles.heroBadgeNeverOff}>NEVER OFF</span>
           </div>
 
           {/* Hero text */}
