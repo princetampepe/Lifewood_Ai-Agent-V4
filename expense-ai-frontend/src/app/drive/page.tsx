@@ -19,6 +19,7 @@ type DriveItem = {
 const FOLDER_MIME_TYPE = 'application/vnd.google-apps.folder';
 const LOGO_URL =
   'https://framerusercontent.com/images/BZSiFYgRc4wDUAuEybhJbZsIBQY.png';
+const RETURNING_USER_KEY = 'lifewood-expense-ai-returning-user';
 
 function isFolder(item: DriveItem): boolean {
   return item.mimeType === FOLDER_MIME_TYPE;
@@ -42,26 +43,6 @@ function summarizeTree(items: DriveItem[]) {
   return { folderCount, fileCount };
 }
 
-const GREETINGS = ['Good day, admin', 'Welcome back, admin', 'Hello, admin'];
-
-function useCyclingGreeting(intervalMs: number) {
-  const [index, setIndex] = useState(0);
-  const [animClass, setAnimClass] = useState('splitIn');
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setAnimClass('splitOut');
-      setTimeout(() => {
-        setIndex((prev) => (prev + 1) % GREETINGS.length);
-        setAnimClass('splitIn');
-      }, 500);
-    }, intervalMs);
-    return () => clearInterval(id);
-  }, [intervalMs]);
-
-  return { greeting: GREETINGS[index], animClass };
-}
-
 export default function DrivePage() {
   const router = useRouter();
   const [folders, setFolders] = useState<DriveItem[]>([]);
@@ -70,12 +51,18 @@ export default function DrivePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<string | null>(null);
-  const { greeting, animClass } = useCyclingGreeting(15000);
+  const [userType, setUserType] = useState<'new' | 'returning'>('new');
 
   const deferredSearch = useDeferredValue(searchInput.trim().toLowerCase());
 
   useEffect(() => {
     setConnectionStatus(new URLSearchParams(window.location.search).get('status'));
+  }, []);
+
+  useEffect(() => {
+    const isReturningUser = window.localStorage.getItem(RETURNING_USER_KEY) === '1';
+    setUserType(isReturningUser ? 'returning' : 'new');
+    window.localStorage.setItem(RETURNING_USER_KEY, '1');
   }, []);
 
   useEffect(() => {
@@ -100,6 +87,22 @@ export default function DrivePage() {
     if (!deferredSearch) return folders;
     return folders.filter((folder) => folder.name.toLowerCase().includes(deferredSearch));
   }, [deferredSearch, folders]);
+
+  const greetingContent = useMemo(() => {
+    if (userType === 'new') {
+      return {
+        header: 'Welcome to Expense AI',
+        description:
+          'Your AI workspace is ready. Connect a folder to start scanning receipts, organizing expenses, and tracking activity automatically.',
+      };
+    }
+
+    return {
+      header: 'Welcome back',
+      description:
+        'Your Expense AI workspace is active. Continue reviewing your scanned receipts and let AI keep your expenses organized in real time.',
+    };
+  }, [userType]);
 
   function openFolder(folderId: string) {
     router.push(`/drive/${folderId}`);
@@ -157,10 +160,20 @@ export default function DrivePage() {
               <span aria-hidden="true">Always On Never Off • Always On Never Off • Always On Never Off • Always On Never Off •</span>
             </div>
           </div>
-          <h1 className={`${styles.greetingText} ${animClass === 'splitIn' ? styles.splitIn : styles.splitOut}`}>
-            {greeting}
+          <h1
+            className={`${styles.greetingText} ${styles.greetingHeader} ${
+              userType === 'new' ? styles.newUserHeaderIn : styles.returningUserHeaderIn
+            }`}
+          >
+            {greetingContent.header}
           </h1>
-          <p className={styles.heroSubtitle}>Select a scanned expense folder below to open its review workspace.</p>
+          <p
+            className={`${styles.heroSubtitle} ${styles.greetingDescription} ${
+              userType === 'new' ? styles.newUserDescriptionIn : styles.returningUserDescriptionIn
+            }`}
+          >
+            {greetingContent.description}
+          </p>
         </div>
         <div className={styles.heroMetrics}>
           <article className={styles.metricCard}>
