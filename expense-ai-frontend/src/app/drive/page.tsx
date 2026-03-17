@@ -85,44 +85,6 @@ function formatRelativeTime(value: string | null): string {
   }).format(new Date(value));
 }
 
-function formatAbsoluteDate(value: string | null): string {
-  if (!value) return 'Waiting for first scan';
-
-  return new Intl.DateTimeFormat('en-PH', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  }).format(new Date(value));
-}
-
-function countItems(item: DriveItem): number {
-  if (!item.children?.length) return 0;
-
-  return item.children.reduce((total, child) => {
-    if (isFolder(child)) {
-      return total + 1 + countItems(child);
-    }
-
-    return total + 1;
-  }, 0);
-}
-
-function getFolderHealth(item: DriveItem): { label: string; tone: 'healthy' | 'attention' } {
-  const totalItems = countItems(item);
-
-  if (totalItems >= 5) {
-    return { label: 'Ready', tone: 'healthy' };
-  }
-
-  if (totalItems >= 1) {
-    return { label: 'Needs uploads', tone: 'attention' };
-  }
-
-  return { label: 'Empty', tone: 'attention' };
-}
-
 export default function DrivePage() {
   const router = useRouter();
   const [folders, setFolders] = useState<DriveItem[]>([]);
@@ -260,14 +222,14 @@ export default function DrivePage() {
         </div>
       </header>
 
-      <div className={styles.pageContent}>
-
-      {/* ── Hero banner ── */}
-      <section className={styles.heroBanner}>
-        <div className={styles.heroBannerLeft}>
-          <span className={styles.heroTagline}>
-            <span className={styles.heroTaglineOn}>ALWAYS ON</span><span className={styles.heroTaglineOff}>NEVER OFF</span>
-          </span>
+      <section className={styles.hero}>
+        <div className={styles.heroCard}>
+          <div className={styles.heroTicker} aria-label="Always on never off">
+            <div className={styles.heroTickerTrack}>
+              <span>Always On Never Off • Always On Never Off • Always On Never Off • Always On Never Off •</span>
+              <span aria-hidden="true">Always On Never Off • Always On Never Off • Always On Never Off • Always On Never Off •</span>
+            </div>
+          </div>
           <h1
             className={`${styles.greetingText} ${styles.greetingHeader} ${
               userType === 'new' ? styles.newUserHeaderIn : styles.returningUserHeaderIn
@@ -451,7 +413,6 @@ export default function DrivePage() {
           )}
         </section>
       )}
-      </div>
     </main>
   );
 }
