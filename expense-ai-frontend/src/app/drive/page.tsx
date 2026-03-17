@@ -43,8 +43,6 @@ function summarizeTree(items: DriveItem[]) {
   return { folderCount, fileCount };
 }
 
-<<<<<<< HEAD
-=======
 function getLatestModified(items: DriveItem[]): string | null {
   let latestTimestamp = 0;
 
@@ -87,65 +85,6 @@ function formatRelativeTime(value: string | null): string {
   }).format(new Date(value));
 }
 
-function formatAbsoluteDate(value: string | null): string {
-  if (!value) return 'Waiting for first scan';
-
-  return new Intl.DateTimeFormat('en-PH', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  }).format(new Date(value));
-}
-
-function countItems(item: DriveItem): number {
-  if (!item.children?.length) return 0;
-
-  return item.children.reduce((total, child) => {
-    if (isFolder(child)) {
-      return total + 1 + countItems(child);
-    }
-
-    return total + 1;
-  }, 0);
-}
-
-function getFolderHealth(item: DriveItem): { label: string; tone: 'healthy' | 'attention' } {
-  const totalItems = countItems(item);
-
-  if (totalItems >= 5) {
-    return { label: 'Ready', tone: 'healthy' };
-  }
-
-  if (totalItems >= 1) {
-    return { label: 'Needs uploads', tone: 'attention' };
-  }
-
-  return { label: 'Empty', tone: 'attention' };
-}
-
-const GREETINGS = ['Good day, admin', 'Welcome back, admin', 'Hello, admin'];
-
-function useCyclingGreeting(intervalMs: number) {
-  const [index, setIndex] = useState(0);
-  const [animClass, setAnimClass] = useState('splitIn');
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setAnimClass('splitOut');
-      setTimeout(() => {
-        setIndex((prev) => (prev + 1) % GREETINGS.length);
-        setAnimClass('splitIn');
-      }, 500);
-    }, intervalMs);
-    return () => clearInterval(id);
-  }, [intervalMs]);
-
-  return { greeting: GREETINGS[index], animClass };
-}
-
->>>>>>> b6b845ce6ae90545d016c4a5d336703ed6f9d584
 export default function DrivePage() {
   const router = useRouter();
   const [folders, setFolders] = useState<DriveItem[]>([]);
@@ -281,7 +220,6 @@ export default function DrivePage() {
         </div>
       </header>
 
-<<<<<<< HEAD
       <section className={styles.hero}>
         <div className={styles.heroCard}>
           <div className={styles.heroTicker} aria-label="Always on never off">
@@ -296,16 +234,6 @@ export default function DrivePage() {
             }`}
           >
             {greetingContent.header}
-=======
-      <div className={styles.pageContent}>
-
-      {/* ── Hero banner ── */}
-      <section className={styles.heroBanner}>
-        <div className={styles.heroBannerLeft}>
-          <span className={styles.heroTagline}>ALWAYS ON NEVER OFF</span>
-          <h1 className={`${styles.greetingText} ${animClass === 'splitIn' ? styles.splitIn : styles.splitOut}`}>
-            {greeting}
->>>>>>> b6b845ce6ae90545d016c4a5d336703ed6f9d584
           </h1>
           <p
             className={`${styles.heroSubtitle} ${styles.greetingDescription} ${
@@ -483,7 +411,6 @@ export default function DrivePage() {
           )}
         </section>
       )}
-      </div>
     </main>
   );
 }
